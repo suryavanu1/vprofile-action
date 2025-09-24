@@ -56,7 +56,7 @@ jobs:
           secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: ${{ env.AWS_REGION }}
           registry: ${{ env.REGISTRY }}
-          repo: ${ env.ECR_REPOSITORY }
+          repo: ${{env.ECR_REPOSITORY }}
           
           tag: latest,${{ github.run_number }}
           dockerfile: ./Dockerfile
