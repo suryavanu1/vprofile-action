@@ -42,5 +42,26 @@ jobs:
            -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/
 
-      
+  BUILD_AND_PUSH_TO_ECR:
+    needs: Testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build and upload image to ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ env.AWS_REGION }}
+          registry: ${{ env.REGISTRY }}
+          repo: ${ env.ECR_REPOSITORY }
+          image: vprofileapp
+          tag: latest,${{ github.run_number }}
+          dockerfile: ./Dockerfile
+          
+          context: ./
+          deamon_off: false
+        
         
