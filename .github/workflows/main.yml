@@ -4,6 +4,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: vprofileapp
   EKS_CLUSTER: vprofile-eks
+  AWS_ACCOUNT_ID: 716145636310
 
 jobs:
   Testing:
@@ -85,13 +86,14 @@ jobs:
       - name: Print config file
         run: cat ~/.kube/config
 
-      - name: Login to ECR
+      - name: Login to ECR (K8s secret)
         run: |
           kubectl create secret docker-registry regcred \
-          --docker-server=${{ env.REGISTRY }} \
-          --docker-username=AWS \
-          --docker-password=$(aws ecr get-login-password --region ${{ env.AWS_REGION }}) \
-          --dry-run=client -o yaml | kubectl apply -f -
+            --docker-server=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com \
+            --docker-username=AWS \
+            --docker-password=$(aws ecr get-login-password --region ${{ env.AWS_REGION }}) \
+            --dry-run=client -o yaml | kubectl apply -f -
+
 
 
 
